@@ -43,7 +43,7 @@ case class ShuttleTileParams(
   tcm: Option[ShuttleTCMParams] = None,
   sgtcm: Option[ShuttleSGTCMParams] = None,
   tileId: Int = 0,
-  tileBeatBytes: Int = 8,
+  tileBeatBytes: Int = 16,
   boundaryBuffers: Boolean = false) extends InstantiableTileParams[ShuttleTile]
 {
   require(icache.isDefined)
@@ -65,7 +65,8 @@ case class ShuttleCrossingParams(
   slave: HierarchicalElementSlavePortParams = HierarchicalElementSlavePortParams(where=SBUS),
   mmioBaseAddressPrefixWhere: TLBusWrapperLocation = SBUS,
   resetCrossingType: ResetCrossingType = NoResetCrossing(),
-  forceSeparateClockReset: Boolean = false
+  forceSeparateClockReset: Boolean = false,
+  forceMergedCreditedTLCrossings: Boolean = false
 ) extends HierarchicalElementCrossingParamsLike
 
 case class ShuttleTileAttachParams(
@@ -386,7 +387,7 @@ class ShuttleTileModuleImp(outer: ShuttleTile) extends BaseTileModuleImp(outer)
     core.io.rocc.busy <> (cmdRouter.io.busy || outer.roccs.map(_.module.io.busy).reduce(_ || _))
     core.io.rocc.interrupt := outer.roccs.map(_.module.io.interrupt).reduce(_ || _)
     val roccCSRIOs = outer.roccs.map(_.module.io.csrs)
-    (core.io.rocc.csrs zip roccCSRIOs.flatten).foreach { t => t._2 := t._1 }
+    (core.io.rocc.csrs zip roccCSRIOs.flatten).foreach { t => t._2 <> t._1 }
   }
 
 
