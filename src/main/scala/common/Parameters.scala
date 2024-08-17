@@ -79,4 +79,5 @@ case class ShuttleCoreParams(
   override def vfh = vector.map(_.vfh).getOrElse(false)
   override def vExts = vector.map(_.vExts).getOrElse(Nil)
   val traceHasWdata: Boolean = debugROB
+  val traceHasRFWdata: Boolean = false
 }
