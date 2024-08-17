@@ -501,7 +501,7 @@ class ShuttleDCacheModule(outer: ShuttleDCache) extends LazyModuleImp(outer)
   cache_resp.bits.data := loadgen.data | s2_sc_fail
 
   val replay_data_resp = Wire(Valid(new ShuttleDMemResp))
-  replay_data_resp.valid := s2_replay_valid && isRead(s2_replay_req.cmd) 
+  replay_data_resp.valid := s2_replay_valid && isRead(s2_replay_req.cmd)
   replay_data_resp.bits.tag := s2_replay_req.tag
   replay_data_resp.bits.size := s2_replay_req.size
   replay_data_resp.bits.has_data := true.B
